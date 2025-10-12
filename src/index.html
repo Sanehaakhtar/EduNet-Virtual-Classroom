@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>EduNet Virtual Classroom</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="main-content">
+            <div class="video-container">
+                <div class="video-feed" id="local-video-container">
+                    <video id="local-video" autoplay playsinline muted></video>
+                    <span>You</span>
+                </div>
+                <div class="video-feed" id="remote-video-container">
+                    <video id="remote-video" autoplay playsinline></video>
+                    <span>Teacher/Student</span>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="start-btn">Start Camera</button>
+                <button id="call-btn">Call</button>
+                <button id="hangup-btn">Hang Up</button>
+            </div>
+        </div>
+        <div class="sidebar">
+            <div class="chat-container">
+                <div id="chat-messages">
+                    <!-- Messages will appear here -->
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="message-input" placeholder="Type a message...">
+                    <button id="send-btn">Send</button>
+                </div>
+            </div>
+            <div class="file-sharing-container">
+                <input type="file" id="file-input">
+                <button id="send-file-btn">Send File</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
