@@ -3,6 +3,7 @@
 // --- Get references to our HTML elements ---
 const startBtn = document.getElementById('start-btn');
 const localVideo = document.getElementById('local-video');
+const remoteVideo = document.getElementById('remote-video'); // Get the remote video element
 
 let localStream;
 
@@ -24,11 +25,12 @@ const startCamera = async () => {
 
 startBtn.addEventListener('click', startCamera);
 
+
 // ===================================================================
-//                 NEW, SIMPLIFIED WEBRTC TICKET SYSTEM
+//                 WEBRTC TICKET SYSTEM (WITH VIDEO)
 // ===================================================================
 
-// --- 1. Get references to our new HTML elements ---
+// --- 1. Get references to our HTML elements ---
 const createTicketBtn = document.getElementById('create-ticket-btn');
 const submitTicketBtn = document.getElementById('submit-ticket-btn');
 const ticketTextarea = document.getElementById('ticket-textarea');
@@ -47,11 +49,18 @@ const appendMessage = (message, sender) => {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 };
 
+// This function runs when we receive the video stream from the other peer
+const setupVideoStream = (event) => {
+    console.log('✅ Received remote video stream!');
+    const [remoteStream] = event.streams;
+    remoteVideo.srcObject = remoteStream;
+};
+
 // When the user clicks the "Send" button...
 sendBtn.addEventListener('click', () => {
     const message = messageInput.value;
     if (message.trim() === '' || !dataChannel || dataChannel.readyState !== 'open') {
-        return; // Don't send empty messages or if channel isn't ready
+        return;
     }
     dataChannel.send(message);
     appendMessage(message, 'You');
@@ -61,10 +70,19 @@ sendBtn.addEventListener('click', () => {
 
 // --- 2. The "Create Ticket" Logic (for User A) ---
 createTicketBtn.addEventListener('click', async () => {
+    if (!localStream) {
+        return alert('Please start your camera first!');
+    }
     console.log('Creating a new connection ticket...');
 
     const iceCandidates = [];
     peerConnection = new RTCPeerConnection();
+    
+    // ** NEW **: Set up the event handler for incoming video
+    peerConnection.ontrack = setupVideoStream;
+
+    // ** NEW **: Add our local camera tracks to the connection to be sent
+    localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
     
     dataChannel = peerConnection.createDataChannel('chat');
     dataChannel.onopen = () => console.log('✅ Data channel is OPEN!');
@@ -72,7 +90,6 @@ createTicketBtn.addEventListener('click', async () => {
 
     peerConnection.onicecandidate = (event) => {
         if (event.candidate) {
-            console.log('Found ICE candidate:', event.candidate);
             iceCandidates.push(event.candidate);
         }
     };
@@ -95,6 +112,10 @@ createTicketBtn.addEventListener('click', async () => {
 
 // --- 3. The "Submit Ticket" Logic (for User B and User A) ---
 submitTicketBtn.addEventListener('click', async () => {
+    if (!localStream && !peerConnection) {
+        // This check is mainly for User B, ensuring their camera is on.
+        return alert('Please start your camera first!');
+    }
     if (!ticketTextarea.value) return alert('Please paste a ticket first!');
 
     const ticket = JSON.parse(ticketTextarea.value);
@@ -105,6 +126,12 @@ submitTicketBtn.addEventListener('click', async () => {
         
         const iceCandidates = [];
         peerConnection = new RTCPeerConnection();
+        
+        // ** NEW **: Set up the event handler for incoming video
+        peerConnection.ontrack = setupVideoStream;
+
+        // ** NEW **: Add our local camera tracks to the connection to be sent
+        localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
         
         peerConnection.onicecandidate = (event) => {
             if (event.candidate) iceCandidates.push(event.candidate);
@@ -121,7 +148,7 @@ submitTicketBtn.addEventListener('click', async () => {
             }
         };
 
-        peerConnection.ondatachannel = (event) => {
+        peerConnection.ondatachanel = (event) => {
             dataChannel = event.channel;
             dataChannel.onopen = () => console.log('✅ Data channel is OPEN!');
             dataChannel.onmessage = (event) => appendMessage(event.data, 'Peer');
