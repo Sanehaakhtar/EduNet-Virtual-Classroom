@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Classroom - EduNet</title>
+    <link rel="stylesheet" href="classroom.css">
+</head>
+<body>
+    <div class="classroom-container">
+        <!-- Header with controls -->
+        <div class="classroom-header">
+            <div class="header-left">
+                <h2>🎓 Virtual Classroom</h2>
+                <div class="connection-status status-connected">
+                    <span class="status-dot"></span>
+                    <span>Connected</span>
+                </div>
+            </div>
+            <button id="hang-up-btn" class="hang-up-btn">End Call</button>
+        </div>
+
+        <!-- Main content area -->
+        <div class="main-content">
+            <!-- Video feeds -->
+            <div class="video-section">
+                <div class="video-feed" id="local-video-container">
+                    <video id="local-video" autoplay playsinline muted></video>
+                    <span class="video-label">You</span>
+                </div>
+                <div class="video-feed" id="remote-video-container">
+                    <video id="remote-video" autoplay playsinline></video>
+                    <span class="video-label">Peer</span>
+                </div>
+            </div>
+
+            <!-- Media controls -->
+            <div class="media-controls">
+                <button id="toggle-video-btn" class="control-btn active">
+                    <span class="icon">📹</span>
+                    <span class="label">Camera</span>
+                </button>
+                <button id="toggle-audio-btn" class="control-btn active">
+                    <span class="icon">🎤</span>
+                    <span class="label">Microphone</span>
+                </button>
+                <button id="screen-share-btn" class="control-btn">
+                    <span class="icon">🖥️</span>
+                    <span class="label">Share Screen</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Sidebar with chat and file sharing -->
+        <div class="sidebar">
+            <!-- Tabs -->
+            <div class="sidebar-tabs">
+                <button class="tab-btn active" data-tab="chat">💬 Chat</button>
+                <button class="tab-btn" data-tab="files">📁 Files</button>
+            </div>
+
+            <!-- Chat Tab -->
+            <div class="tab-content active" id="chat-tab">
+                <div id="chat-messages" class="chat-messages">
+                    <div class="system-message">Classroom session started. Say hello!</div>
+                </div>
+                <div class="chat-input-container">
+                    <input type="text" id="message-input" placeholder="Type a message..." />
+                    <button id="send-message-btn">Send</button>
+                </div>
+            </div>
+
+            <!-- Files Tab -->
+            <div class="tab-content" id="files-tab">
+                <div class="file-upload-area">
+                    <h3>Share a File</h3>
+                    <input type="file" id="file-input" />
+                    <button id="send-file-btn" class="primary-btn">Send File</button>
+                </div>
+                <div class="shared-files">
+                    <h3>Shared Files</h3>
+                    <div id="file-list" class="file-list">
+                        <p class="empty-message">No files shared yet</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="classroom.js"></script>
+</body>
+</html>

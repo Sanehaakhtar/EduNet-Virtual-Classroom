@@ -6,46 +6,154 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <div class="app-container">
-        <div class="main-content">
-            <div class="video-container">
-                <div class="video-feed" id="local-video-container">
-                    <video id="local-video" autoplay playsinline muted></video>
-                    <span>You</span>
-                </div>
-                <div class="video-feed" id="remote-video-container">
-                    <video id="remote-video" autoplay playsinline></video>
-                    <span>Teacher/Student</span>
-                </div>
+    <!-- SCREEN 1: Welcome Screen -->
+    <div id="welcome-screen" class="screen active">
+        <div class="welcome-container">
+            <h1>🎓 EduNet Virtual Classroom</h1>
+            <p class="subtitle">Connect peer-to-peer for video calls, chat, and file sharing</p>
+            
+            <div class="info-box">
+                <h3>📋 How it works:</h3>
+                <ol>
+                    <li>One person creates a connection ticket</li>
+                    <li>Share the ticket with your peer (copy-paste)</li>
+                    <li>The other person pastes and submits the ticket</li>
+                    <li>Exchange answers to complete the connection</li>
+                    <li>Start your virtual classroom!</li>
+                </ol>
             </div>
-            <div class="controls">
-                <button id="start-btn">Start Camera</button>
-                <hr>
-                
-                <!-- Step 1 for the initiator -->
-                <button id="create-ticket-btn">1. Create Connection Ticket</button>
-                
-                <!-- Step 2 and 3 -->
-                <textarea id="ticket-textarea" placeholder="Paste a ticket here..."></textarea>
-                <button id="submit-ticket-btn">2. Submit Ticket</button>
-            </div>
-        </div>
-        <div class="sidebar">
-            <div class="chat-container">
-                <div id="chat-messages">
-                    <!-- Messages will appear here -->
-                </div>
-                <div class="chat-input">
-                    <input type="text" id="message-input" placeholder="Type a message...">
-                    <button id="send-btn">Send</button>
-                </div>
-            </div>
-            <div class="file-sharing-container">
-                <input type="file" id="file-input">
-                <button id="send-file-btn">Send File</button>
+
+            <div class="role-selection">
+                <button id="host-btn" class="role-btn">
+                    <span class="icon">👨‍🏫</span>
+                    <span class="role-title">Host a Session</span>
+                    <span class="role-desc">Create a connection ticket</span>
+                </button>
+                <button id="join-btn" class="role-btn">
+                    <span class="icon">👨‍🎓</span>
+                    <span class="role-title">Join a Session</span>
+                    <span class="role-desc">I have a ticket to submit</span>
+                </button>
             </div>
         </div>
     </div>
-    <script src="renderer.js" defer></script>
+
+    <!-- SCREEN 2: Connection Setup -->
+    <div id="setup-screen" class="screen">
+        <div class="setup-container">
+            <button id="back-btn" class="back-btn">← Back</button>
+            
+            <h2 id="setup-title">Connection Setup</h2>
+            
+            <!-- Host View -->
+            <div id="host-view" class="setup-view">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Create Your Connection Ticket</h3>
+                    <button id="create-ticket-btn" class="primary-btn">Generate Ticket</button>
+                </div>
+
+                <div id="ticket-display" class="step-card" style="display: none;">
+                    <div class="step-number">2</div>
+                    <h3>Share This Ticket</h3>
+                    <p class="instruction">Copy this ticket and send it to your peer via any messaging app:</p>
+                    <textarea id="ticket-textarea" readonly></textarea>
+                    <button id="copy-ticket-btn" class="secondary-btn">📋 Copy to Clipboard</button>
+                </div>
+
+                <div id="answer-input" class="step-card" style="display: none;">
+                    <div class="step-number">3</div>
+                    <h3>Paste Their Answer</h3>
+                    <p class="instruction">When your peer sends back their answer, paste it here:</p>
+                    <textarea id="answer-textarea" placeholder="Paste the answer ticket here..."></textarea>
+                    <button id="submit-answer-btn" class="primary-btn">Submit Answer</button>
+                </div>
+            </div>
+
+            <!-- Join View -->
+            <div id="join-view" class="setup-view" style="display: none;">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Paste the Connection Ticket</h3>
+                    <p class="instruction">Your peer should have sent you a ticket. Paste it here:</p>
+                    <textarea id="received-ticket-textarea" placeholder="Paste the ticket you received here..."></textarea>
+                    <button id="process-ticket-btn" class="primary-btn">Process Ticket</button>
+                </div>
+
+                <div id="answer-display" class="step-card" style="display: none;">
+                    <div class="step-number">2</div>
+                    <h3>Send This Answer Back</h3>
+                    <p class="instruction">Copy this answer and send it back to your peer:</p>
+                    <textarea id="answer-output-textarea" readonly></textarea>
+                    <button id="copy-answer-btn" class="secondary-btn">📋 Copy to Clipboard</button>
+                </div>
+
+                <div id="waiting-message" class="step-card" style="display: none;">
+                    <div class="step-number">3</div>
+                    <h3>Waiting for Connection...</h3>
+                    <div class="loading-spinner"></div>
+                    <p class="instruction">Once your peer submits your answer, the connection will establish automatically!</p>
+                </div>
+            </div>
+
+            <div class="connection-status status-disconnected">
+                <span class="status-dot"></span>
+                <span id="status-text">Disconnected</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 3: Classroom (Video/Chat) -->
+    <div id="classroom-screen" class="screen">
+        <div class="classroom-container">
+            <div class="main-content">
+                <div class="classroom-header">
+                    <h2>🎓 Virtual Classroom</h2>
+                    <button id="hang-up-btn" class="hang-up-btn">Hang Up</button>
+                </div>
+
+                <div class="video-container">
+                    <div class="video-feed" id="local-video-container">
+                        <video id="local-video" autoplay playsinline muted></video>
+                        <span>You</span>
+                    </div>
+                    <div class="video-feed" id="remote-video-container">
+                        <video id="remote-video" autoplay playsinline></video>
+                        <span>Peer</span>
+                    </div>
+                </div>
+
+                <div class="media-controls">
+                    <button id="start-camera-btn" class="control-btn">
+                        <span class="icon">📹</span>
+                        <span>Start Camera</span>
+                    </button>
+                    <button id="mute-btn" class="control-btn">
+                        <span class="icon">🎤</span>
+                        <span>Mute</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="chat-container">
+                    <div class="chat-header">💬 Chat</div>
+                    <div id="chat-messages"></div>
+                    <div class="chat-input">
+                        <input type="text" id="message-input" placeholder="Type a message...">
+                        <button id="send-btn">Send</button>
+                    </div>
+                </div>
+
+                <div class="file-sharing-container">
+                    <h3>📁 File Sharing</h3>
+                    <input type="file" id="file-input">
+                    <button id="send-file-btn">Send File</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
 </body>
 </html>
