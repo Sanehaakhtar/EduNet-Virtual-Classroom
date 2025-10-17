@@ -1,0 +1,130 @@
+/* =================================
+   Global Styles & App Layout
+   ================================= */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f2f5;
+    color: #333;
+}
+
+.app-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+/* =================================
+   Main Content (Video Area)
+   ================================= */
+.main-content {
+    flex-grow: 1; /* Takes up the remaining space */
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px; /* Space between video area and controls */
+}
+
+.video-container {
+    display: flex;
+    gap: 20px;
+    flex-grow: 1; /* Makes video feeds fill the available vertical space */
+}
+
+.video-feed {
+    background-color: #000;
+    border-radius: 8px;
+    position: relative;
+    flex: 1; /* Each video feed takes up equal space */
+    overflow: hidden; /* Ensures video stays within the rounded corners */
+}
+
+.video-feed span {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 5px 8px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures video covers the area without distortion */
+}
+
+.controls {
+    text-align: center;
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.controls button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    margin: 0 5px;
+    background-color: #007bff;
+    color: white;
+    transition: background-color 0.2s;
+}
+
+.controls button:hover {
+    background-color: #0056b3;
+}
+
+/* =================================
+   Sidebar (Chat & File Sharing)
+   ================================= */
+.sidebar {
+    width: 350px;
+    flex-shrink: 0; /* Prevents the sidebar from shrinking */
+    background-color: #ffffff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid #ddd;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.05);
+}
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 70%; /* Chat takes up most of the sidebar */
+}
+
+#chat-messages {
+    flex-grow: 1;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 15px;
+    overflow-y: auto; /* Adds a scrollbar when messages overflow */
+}
+
+.chat-input {
+    display: flex;
+    gap: 10px;
+}
+
+#message-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.file-sharing-container {
+    margin-top: auto; /* Pushes the file sharing to the bottom */
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}

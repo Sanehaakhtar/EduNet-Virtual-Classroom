@@ -18,8 +18,11 @@ allowing users to connect directly without a central server for video streaming,
     `cd Edu-Net-project`
 3.  **Install the dependencies:**
     `npm install`
-4.  **Run the application:**
+4.  **navigate to the /src directory**
+    `cd src`
+5.  **Run the application:**
     `npm start`
+
 
 ## Project Members
 
