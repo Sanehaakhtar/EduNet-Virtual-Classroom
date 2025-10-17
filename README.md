@@ -27,5 +27,5 @@ allowing users to connect directly without a central server for video streaming,
 ## Project Members
 
 *   Saneha Akhtar
-*   Azka's Hafeez
+*   Azka Hafeez
 
